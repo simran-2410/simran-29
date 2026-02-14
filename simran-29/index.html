@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Only For Akhil 💖</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:'Comic Sans MS', cursive;
+  background:linear-gradient(135deg,#ff9ecf,#ff69b4,#ffc0cb);
+  overflow:hidden;
+  text-align:center;
+  color:white;
+}
+
+/* Pages */
+.page{
+  display:none;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+.active{ display:flex; }
+
+/* Buttons */
+button{
+  padding:12px 25px;
+  margin:10px;
+  border:none;
+  border-radius:30px;
+  font-size:18px;
+  cursor:pointer;
+  background:#ff1493;
+  color:white;
+  transition:0.3s;
+}
+button:hover{ transform:scale(1.1); }
+
+/* Envelope */
+.envelope{
+  width:220px;
+  height:160px;
+  background:#ff69b4;
+  position:relative;
+  cursor:pointer;
+  border-radius:10px;
+}
+.envelope:before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:0;
+  height:0;
+  border-left:110px solid transparent;
+  border-right:110px solid transparent;
+  border-top:80px solid #ff1493;
+  transition:1s;
+  transform-origin:top;
+}
+.envelope.open:before{ transform:rotateX(180deg); }
+
+/* NO BUTTON */
+#noBtn{ position:absolute; }
+
+/* POPUP */
+.popup{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(255,105,180,0.95);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+/* Floating hearts */
+.heart{
+  position:fixed;
+  bottom:-10px;
+  animation:floatUp 6s linear infinite;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0);opacity:1;}
+  100%{transform:translateY(-100vh);opacity:0;}
+}
+
+/* Shake animation for wrong answers */
+@keyframes shake {
+  0% { transform: translate(0px, 0px) rotate(0deg); }
+  10% { transform: translate(-5px, 0px) rotate(-5deg); }
+  20% { transform: translate(5px, 0px) rotate(5deg); }
+  30% { transform: translate(-5px, 0px) rotate(-5deg); }
+  40% { transform: translate(5px, 0px) rotate(5deg); }
+  50% { transform: translate(-5px, 0px) rotate(-5deg); }
+  60% { transform: translate(5px, 0px) rotate(5deg); }
+  70% { transform: translate(-5px, 0px) rotate(-5deg); }
+  80% { transform: translate(5px, 0px) rotate(5deg); }
+  90% { transform: translate(-5px, 0px) rotate(-5deg); }
+  100% { transform: translate(0px, 0px) rotate(0deg); }
+}
+.shake{
+  animation: shake 0.5s;
+  background-color: #ff1a75 !important;
+}
+
+/* Pop animation for Good boy */
+@keyframes pop{
+  0%{transform:scale(0.5); opacity:0;}
+  100%{transform:scale(1); opacity:1;}
+}
+
+input{ padding:8px; margin:5px; border-radius:10px; border:none; text-align:center; }
+
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="https://image2url.com/r2/default/audio/1771064006008-6c4f5134-5985-4539-841f-6dd1c9db69f8.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PASSWORD MCQ -->
+<div id="lockPage" class="page active">
+  <h1>🔐CHOOSE PASSWORD AKHILLLL..!💖</h1>
+  <h3>Choose the correct option Akhil 😏</h3>
+  <button onclick="checkAnswer(1)">1) YOUR PERFUME IS SOO GOOD 😌</button>
+  <button onclick="checkAnswer(2)">2) ME AAP SE BAATH NAI KAR RAHE 😒</button>
+  <button onclick="checkAnswer(3)">3) YEAH KARLO TUM 😏</button>
+  <button onclick="checkAnswer(4)">4) AAB KARLENA MERSE BAAT 😌</button>
+  <p id="errorMsg"></p>
+</div>
+
+<!-- ENVELOPE PAGE -->
+<div id="page1" class="page">
+  <h1>Welcome Akhil 💌</h1>
+  <div class="envelope" onclick="openEnvelope(this)"></div>
+  <h2>Tap to Open 💖</h2>
+</div>
+
+<!-- SPICY MCQ PAGE -->
+<div id="page2" class="page">
+  <h2>Akhil... are you single ready to mingle?? 😏</h2>
+  <button onclick="spicyNext(this)">A) Yes</button>
+  <button onclick="spicyNext(this)">B) Yes</button>
+  <button onclick="spicyNext(this)">C) Yes</button>
+  <button onclick="spicyNext(this)">D) All of the above</button>
+</div>
+
+<!-- FILL IN BLANKS PAGE -->
+<div id="page3" class="page">
+  <h2>Fill in the blanks, Akhil 😘</h2>
+  <p>A SHOULDER TO CRY ON ---> <input type="text"></p>
+  <p>PHLE VO ROSE DEGA ---> <input type="text"></p>
+  <p>I LOVEE UUUU ---> <input type="text"></p>
+  <p>ARE YOU PLANNING TO FIGHT WITH ME? ---> <input type="text"></p>
+  <button onclick="checkFillAndNext()">Next 💖</button>
+</div>
+
+<!-- VALENTINE PAGE -->
+<div id="page4" class="page">
+  <h2>Will You Be My Valentine, Akhil?? 💘</h2>
+  <button onclick="showLove()">YES 💕</button>
+  <button id="noBtn">NO 😜</button>
+</div>
+
+<!-- FINAL POPUP -->
+<div id="popup" class="popup">
+  <img src="https://i.pinimg.com/736x/d5/3d/ef/d53def335fd688f21c6d90d814b26c1b.jpg" width="300" style="border-radius:15px; box-shadow:0 10px 20px rgba(0,0,0,0.5);">
+  <h1>I LUVV U SOOO MUCH AKHIL 💖<br>HAPPY VALENTINE DAY BABEE</h1>
+  <button onclick="closePopup()">EXIT 💌</button>
+</div>
+
+<script>
+window.onload = function(){
+
+/* SOUNDS */
+let bgMusic = document.getElementById("bgMusic");
+let successSound = new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
+let noSound = new Audio("https://www.soundjay.com/buttons/sounds/button-10.mp3");
+
+/* PASSWORD MCQ CHECK */
+function checkAnswer(option){
+  let errorMsg = document.getElementById("errorMsg");
+  errorMsg.innerHTML = ""; // clear previous error
+  if(option === 1){
+    bgMusic.play(); // start music
+    successSound.play();
+
+    let lockPage = document.getElementById("lockPage");
+    let msg = document.createElement("h1");
+    msg.style.fontSize = "40px";
+    msg.style.animation = "pop 0.6s ease";
+    msg.innerText = "Good boy Akhil 😌💖";
+    lockPage.appendChild(msg);
+
+    lockPage.querySelectorAll("button").forEach(b=>b.style.display="none");
+
+    setTimeout(()=>{
+      lockPage.classList.remove("active");
+      document.getElementById("page1").classList.add('active');
+    },2000);
+  } else {
+    let buttons = document.querySelectorAll("#lockPage button");
+    buttons[option-1].classList.add("shake");
+    setTimeout(()=>{ buttons[option-1].classList.remove("shake"); },500);
+    errorMsg.innerHTML = "Wrong answer...! EWWWWWWWWWWWWWW";
+  }
+}
+
+/* ENVELOPE */
+function openEnvelope(el){
+  el.classList.add("open");
+  setTimeout(()=>{ nextPage(2); },1000);
+}
+
+/* PAGE NAVIGATION */
+function nextPage(num){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById("page"+num).classList.add('active');
+}
+
+/* SPICY MCQ */
+function spicyNext(btn){
+  btn.style.transform = "scale(1.2)";
+  setTimeout(()=>{ nextPage(3); },200);
+}
+window.spicyNext = spicyNext;
+
+/* FILL IN BLANKS CHECK */
+window.checkFillAndNext = function(){
+  let inputs = document.querySelectorAll("#page3 input");
+  let allFilled = true;
+  inputs.forEach(input => { if(input.value.trim()==="") allFilled=false; });
+  if(allFilled){ nextPage(4); }
+  else { alert("WHAT IS THIS BEHAVIOUR...HAME AAPSE YEAH UMEED NAI THE,FILL THE BLANKS!!!,,EWWWWWWWWW"); }
+}
+
+/* NO BUTTON */
+let noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", ()=>{
+  noSound.play();
+  noBtn.style.top = Math.random() * 80 + "%";
+  noBtn.style.left = Math.random() * 80 + "%";
+});
+
+/* YES BUTTON */
+window.showLove = function(){
+  document.getElementById("popup").style.display="flex";
+  confetti({ particleCount:200, spread:100, origin:{ y:0.6 } });
+}
+
+/* EXIT BUTTON */
+window.closePopup = function(){
+  // Redirect out of website
+  window.location.href = "https://www.google.com"; 
+}
+
+/* FLOATING HEARTS */
+setInterval(()=>{
+  let heart=document.createElement("div");
+  heart.className="heart";
+  heart.innerHTML="💖";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.fontSize=(Math.random()*20+15)+"px";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+},500);
+
+/* Expose functions */
+window.checkAnswer = checkAnswer;
+window.openEnvelope = openEnvelope;
+
+}
+</script>
+
+</body>
+</html>
